@@ -116,6 +116,8 @@ mod socket;
 mod split;
 #[cfg(any(feature = "sources-splunk_hec", feature = "sinks-splunk_hec"))]
 mod splunk_hec;
+#[cfg(feature = "sources-splunk_tcpout")]
+mod splunk_tcpout;
 #[cfg(feature = "sinks-statsd")]
 mod statsd_sink;
 #[cfg(feature = "sources-statsd")]

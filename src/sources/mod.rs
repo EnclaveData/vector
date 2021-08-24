@@ -56,6 +56,8 @@ pub mod prometheus;
 pub mod socket;
 #[cfg(feature = "sources-splunk_hec")]
 pub mod splunk_hec;
+#[cfg(feature = "sources-splunk_tcpout")]
+pub mod splunk_tcpout;
 #[cfg(feature = "sources-statsd")]
 pub mod statsd;
 #[cfg(feature = "sources-stdin")]
