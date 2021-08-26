@@ -2,7 +2,7 @@ use super::InternalEvent;
 use metrics::counter;
 use serde_json::Error;
 
-#[cfg(feature = "sources-splunk_tcpout")]
+#[cfg(feature = "sources-splunk_tcp")]
 pub(crate) use self::source::*;
 
 #[derive(Debug)]
@@ -35,7 +35,7 @@ impl InternalEvent for SplunkTcpEventEncodeError {
     }
 }
 
-#[cfg(feature = "sources-splunk_tcpout")]
+#[cfg(feature = "sources-splunk_tcp")]
 mod source {
     use super::InternalEvent;
     use crate::sources::splunk_hec::ApiError;
