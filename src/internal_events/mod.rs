@@ -255,6 +255,8 @@ pub(crate) use self::socket::*;
 pub use self::split::*;
 #[cfg(any(feature = "sources-splunk_hec", feature = "sinks-splunk_hec"))]
 pub(crate) use self::splunk_hec::*;
+#[cfg(feature = "sources-splunk_tcp")]
+pub(crate) use self::splunk_tcp::*;
 #[cfg(feature = "sinks-statsd")]
 pub use self::statsd_sink::*;
 #[cfg(feature = "sources-statsd")]
