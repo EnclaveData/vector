@@ -28,7 +28,7 @@ impl fmt::Display for ParsedSplunkTCPEvent {
 pub struct SplunkTCPHeader {
     protocol: String,
     hostname: String,
-    port: i16,
+    port: i32,
 }
 
 impl SplunkTCPHeader {
@@ -45,16 +45,17 @@ impl fmt::Display for SplunkTCPHeader {
 }
 
 pub fn parse_header(frame: &Bytes) -> SplunkTCPHeader {
+    println!("parse_header->frame-> {:?}", frame);
     let head = frame.slice(0..399);
     let protocol = head.slice(0..127);
-    let hostname = head.slice(128..255);
-    let port = head.slice(256..384);
+    let hostname = head.slice(128..384);
+    let port = head.slice(385..399);
 
     // i16::from_be_bytes(port.chunk().try_into().unwrap())
     return SplunkTCPHeader {
         protocol: bytes_to_string(&protocol),
         hostname: bytes_to_string(&hostname),
-        port: bytes_to_i16(&port),
+        port: bytes_to_i32(&port),
     };
 }
 
@@ -62,7 +63,10 @@ fn bytes_to_string(b: &Bytes) -> String {
     str::from_utf8(b.chunk()).unwrap().to_string().trim_end_matches(char::from(0)).to_string()
 }
 
-fn bytes_to_i16(b: &Bytes) -> i16 {
-    println!("{:?}", b);
-    i16::from_be_bytes(b.chunk().try_into().unwrap())
+fn bytes_to_i32(b: &Bytes) -> i32 {
+    println!("bytes_to_i32->b-> {:?}", b);
+
+    let (int_bytes,_rest) = b.split_at(std::mem::size_of::<i32>());
+    println!("bytes_to_i32->int_bytes-> {:?}", int_bytes);
+    i32::from_ne_bytes(int_bytes.try_into().unwrap())
 }
