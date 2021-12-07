@@ -1,6 +1,7 @@
 use bytes::{Buf, Bytes};
 use std::{fmt, str};
 use std::convert::TryInto;
+use nom::ParseTo;
 
 pub struct ParsedSplunkTCPEvent {
     pub(crate) header: SplunkTCPHeader,
@@ -48,8 +49,8 @@ pub fn parse_header(frame: &Bytes) -> SplunkTCPHeader {
     println!("parse_header->frame-> {:?}", frame);
     let head = frame.slice(0..399);
     let protocol = head.slice(0..127);
-    let hostname = head.slice(128..384);
-    let port = head.slice(385..399);
+    let hostname = head.slice(128..383);
+    let port = head.slice(384..399);
 
     // i16::from_be_bytes(port.chunk().try_into().unwrap())
     return SplunkTCPHeader {
@@ -59,14 +60,19 @@ pub fn parse_header(frame: &Bytes) -> SplunkTCPHeader {
     };
 }
 
+pub fn parse_message(frame: &Bytes) {
+    let iter = frame.into_iter();
+    let read = frame.reader();
+    read.rea
+}
+
 fn bytes_to_string(b: &Bytes) -> String {
     str::from_utf8(b.chunk()).unwrap().to_string().trim_end_matches(char::from(0)).to_string()
 }
 
 fn bytes_to_i32(b: &Bytes) -> i32 {
-    println!("bytes_to_i32->b-> {:?}", b);
-
     let (int_bytes,_rest) = b.split_at(std::mem::size_of::<i32>());
-    println!("bytes_to_i32->int_bytes-> {:?}", int_bytes);
-    i32::from_ne_bytes(int_bytes.try_into().unwrap())
+    let int_str = str::from_utf8(&int_bytes).unwrap();
+    let r = int_str.parse::<i32>().unwrap();
+    r
 }
